@@ -1,5 +1,5 @@
 // -*- explicit-buffer-name: "Cell.cpp<M1-MOBJ/4-5>" -*-
-//test
+
 #include  <cstdlib>
 #include  "Cell.h"
 #include  "Term.h"
