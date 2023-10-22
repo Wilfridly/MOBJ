@@ -19,7 +19,7 @@ namespace Netlist{
         public : 
             //constructeur & destructeur
             Net     ( Cell*, const std::string&, Term::Type ); 
-            ~Net     ();  
+            ~Net    ();  
             
             //Accesseurs
             Cell*                     getCell       () const;

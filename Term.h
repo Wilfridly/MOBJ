@@ -24,24 +24,24 @@ namespace Netlist {
             static Direction    toDirection ( std::string );
 
             //Prédicats et accesseurs
-            inline bool               isInternal   () const{return true;}
-            inline bool               isExternal   () const{return true;}
+            inline bool               isInternal   () const{return (type_ == Internal) ? true : false;}
+            inline bool               isExternal   () const{return (type_ == External) ? true : false;}
             inline const std::string& getName      () const{return name_;}
-            inline Node*              getNode      () {return NULL;}
-            inline Net*               getNet       () const {return NULL;}
-            inline Cell*              getCell      () const {return NULL;}
+            inline Node*              getNode      () {return &node_;}
+            inline Net*               getNet       () const {return net_;}
+            inline Cell*              getCell      () const {return (type_ == External) ? static_cast<Cell*>(owner_) : NULL;}
                    Cell*              getOwnerCell () const;
-            inline Instance*          getInstance  () const {return NULL;}
-            inline Direction          getDirection () const {return In;}
-            inline Point              getPosition  () const {return Point(0,0);}
+            inline Instance*          getInstance  () const {return (type_ == Internal) ? static_cast<Instance*>(owner_) : NULL;}
+            inline Direction          getDirection () const {return direction_;}
+            inline Point              getPosition  () const {return Point();}
             inline Type               getType      () const {return type_;}
 
             //Modificateurs
-                void  setNet       ( Net* );
-                void  setNet       ( const std::string& );
-            inline void  setDirection ( Direction d);
-                void  setPosition  ( const Point& );
-                void  setPosition  ( int x_, int y_);
+                void        setNet       ( Net* );
+                void        setNet       ( const std::string& );
+            inline void     setDirection ( Direction d){direction_= d;}
+                void        setPosition  ( const Point& );
+                void        setPosition  ( int x_, int y_);
         private :
             void*         owner_;
             std::string   name_;

@@ -48,7 +48,7 @@ namespace Netlist {
         break;
       }
     }
-
+    std::cout << "debug::Cell::-Cell()" << std::endl;
     while ( not nets_     .empty() ) delete *nets_     .begin();
     while ( not instances_.empty() ) delete *instances_.begin();
     while ( not terms_    .empty() ) delete *terms_    .begin();

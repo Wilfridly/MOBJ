@@ -8,16 +8,40 @@
 #include "Net.h"
 
 namespace Netlist{
-    Instance::Instance      ( Cell* owner, Cell* model, const std::string& ){}
-    Instance::~Instance      (){}
+    Instance::Instance( Cell* owner, Cell* model, const std::string& name){
+        owner_ = owner;
+        masterCell_ = model;
+        name_ = name;
+        terms_ = std::vector<Term*>();
+        position_ = Point(0,0);
+    }
+    
+    Instance::~Instance(){}
 
     //Accessseurs
-    const std::string&        Instance::getName       () const{return NULL;}
-    Cell*                     Instance::getMasterCell () const{return NULL;}
-    Cell*                     Instance::getCell       () const{return NULL;}
-    const std::vector<Term*>& Instance::getTerms      () const{return std::vector<Term*>();}
-    Term*                     Instance::getTerm       ( const std::string& ) const{return NULL;}
-    Point                     Instance::getPosition   () const{return Point(0,0);}
+    const std::string& Instance::getName() const{
+        return name_;
+    }
+
+    Cell* Instance::getMasterCell () const{
+        return masterCell_;
+    }
+
+    Cell* Instance::getCell() const{
+        return owner_;
+    }
+
+    const std::vector<Term*>& Instance::getTerms() const{
+        return terms_;
+    }
+
+    Term* Instance::getTerm( const std::string& s) const{
+        return NULL;
+    }
+
+    Point Instance::getPosition() const{
+        return Point(0,0);
+    }
 
     //Modificateurs
     bool  Instance::connect       ( const std::string& name, Net* ){return true;}
