@@ -15,6 +15,8 @@ namespace Netlist{
         direction_ = d;
         type_ = External;
         net_ = NULL;
+        cell->add(this);
+        std::cout << "Debug::Term CTOR : " << name_ << std::endl;
     }
 
     Term::Term ( Instance* instance, const Term* modelTerm ):node_(this,Node::noid){
@@ -23,9 +25,16 @@ namespace Netlist{
         direction_ = modelTerm->direction_;
         type_ = Internal;
         net_ = modelTerm->net_;
+        instance->add(this);
+        std::cout << "Debug::Term2 CTOR" << std::endl;
     }
 
-    Term::~Term (){}
+    Term::~Term (){
+        if(type_ == External){
+            static_cast<Cell*>(owner_)->remove(this);
+        }
+        else static_cast<Instance*>(owner_)->remove(this);
+    }
                 
     std::string Term::toString (Type t){
         return((t == 1) ? std::string("Internal") : std::string("External"));
@@ -65,22 +74,34 @@ namespace Netlist{
     }
 
     //Modificateurs
-        void Term::setNet( Net* net){
+    void Term::setNet( Net* net){
+        if(net == NULL){
+            net_ = NULL;
+            if(node_.getId() != Node::noid)
+                net_->remove(&node_); 
+        }
+        else{
             net_ = net;
             net_->add(&node_);
         }
+    }
 
-        void  Term::setNet( const std::string& name){
-            name_ = name;
-            //net_ = 
+    void  Term::setNet( const std::string& name){
+        Net* net = getOwnerCell()->getNet(name);
+        if(net == NULL){
+            std::cout << "[ERROR]" << name << " non trouvé " << std::endl;
+            exit( 1 );
+        }
+        net_ = net;
+        net_->add(&node_);
+    }
 
-        }
+    void  Term::setPosition( const Point& p ){
+        node_.setPosition(p);
+    }
 
-        void  Term::setPosition( const Point& p ){
-            p.getX();
-            p.getY();
-        }
-        void  Term::setPosition( int x, int y ){
-            
-        }
+    void  Term::setPosition( int x, int y ){
+        node_.setPosition(x,y);
+    }
+
 }

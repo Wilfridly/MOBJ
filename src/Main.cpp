@@ -73,6 +73,7 @@ int main ( int argc, char* argv[] )
     // Term t = Term(and2,"test",Term::In);
     // bool r = t.isInternal();
     // cout << r << endl;
+    cout << halfadder->getName() << endl;
   }
   return 0;
 }

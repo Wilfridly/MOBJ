@@ -42,13 +42,14 @@ namespace Netlist {
 
   Cell::~Cell ()
   {
+    std::cout << "debug::Cell::dtor CELL" << std::endl;
     for ( vector<Cell*>::iterator icell=cells_.begin() ; icell != cells_.end() ; ++icell ) {
       if (*icell == this) {
         cells_.erase( icell );
         break;
       }
     }
-    std::cout << "debug::Cell::-Cell()" << std::endl;
+    
     while ( not nets_     .empty() ) delete *nets_     .begin();
     while ( not instances_.empty() ) delete *instances_.begin();
     while ( not terms_    .empty() ) delete *terms_    .begin();
@@ -125,9 +126,9 @@ namespace Netlist {
 
   bool  Cell::connect ( const string& name, Net* net )
   {
+    cout << "Debug Cell::Connect" << endl;
     Term* term = getTerm( name );
     if (term == NULL) return false;
- 
     term->setNet( net );
     return true;
   }

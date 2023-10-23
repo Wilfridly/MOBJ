@@ -14,11 +14,13 @@ namespace Netlist{
         id_ = Node::noid;
         type_ = t;
         nodes_ = std::vector<Node*>();
-        std::cout << "debug::Net::ctor" << std::endl;
+        owner_->add(this);
+        std::cout << "debug::Net CTOR" << std::endl;
     }
     
     Net::~Net(){
-        std::cout << "debug::Net::dtor" << std::endl;
+        owner_->remove(this);
+        std::cout << "debug::Net::dtor NET" << std::endl;
     }  
     
     //Accesseurs
@@ -44,21 +46,22 @@ namespace Netlist{
     
     size_t Net::getFreeNodeId () const{
         for(size_t i = 0; i < nodes_.size();i++){
-            if(nodes_[i]== NULL)
+            if(nodes_[i]== NULL) {
+                std::cout<< "debug::Net::getFreeNodeId ()"<< std::endl;
                 return i;
+            }
         }
+        std::cout<< "debug::Net::getFreeNodeId ()"<< std::endl;
         return nodes_.size();
     }
 
     //Modificateurs 
     void  Net::add( Node* node){
-        if(node->getId() != Node::noid)
-        {
+        if(node->getId() != Node::noid) 
             nodes_[node->getId()];
-        }
         else{
             size_t indice = getFreeNodeId();
-            if (nodes_.size() != indice)
+            if (nodes_.size() != indice) 
                 nodes_[indice]= node;
             else
                 nodes_.push_back(node);
@@ -67,6 +70,16 @@ namespace Netlist{
     }
     
     bool  Net::remove( Node* node){
-        return true;
+        for(size_t i = 0; i < nodes_.size();i++){
+            if(nodes_[i] == node){
+                node->setId(Node::noid);
+                node->getTerm()->setNet(NULL);
+                nodes_[i] = NULL;
+                std::cout << "debug::Net::remove()true" << std::endl;
+                return true;
+            }
+        }
+        std::cout << "debug::Net::remove()false" << std::endl;
+        return false;
     }
 }
