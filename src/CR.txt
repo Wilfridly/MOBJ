@@ -1,0 +1,11 @@
+TME 4 & 5 fait par Wilfrid LYAUTEY en master SESI.
+
+Question 1 :
+Implémentation des classes term,net et instance.
+Compilation réussite en ne méttant rien dans les entêtes.
+Implémentation classe par classe de l'ensemble des définitions des fonctions membres.
+Cmpilation réussite.
+
+Question 2 :
+Implémentation des toXml().
+Pour l'instant le Net::toXml() ne fonctionne pas correctement.
