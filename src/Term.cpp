@@ -85,7 +85,7 @@ namespace Netlist{
             net_ = net;
             net_->add(&node_);
         }
-    
+    }
 
     void  Term::setNet( const std::string& name){
         Net* net = getOwnerCell()->getNet(name);

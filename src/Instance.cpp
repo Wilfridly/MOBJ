@@ -43,16 +43,16 @@ namespace Netlist{
 
     //Modificateurs
     bool  Instance::connect       ( const std::string& name, Net* net){
-        Term* term = getTerm( name );
+        Term* term = getTerm(name);
         if (term == NULL) return false;
-        term->setNet( net );
+        term->setNet(net);
         return true;
     }
 
     void  Instance::add           ( Term* term){
         terms_.push_back(term);
-
     }
+
     void  Instance::remove        ( Term* term){
         for ( std::vector<Term*>::iterator it = terms_.begin() ; it != terms_.end() ; ++it ) {
             if (*it == term) terms_.erase( it );

@@ -61,7 +61,6 @@ int main ( int argc, char* argv[] )
     ha_and2->connect(  "q", ha_cout );
     halfadder->toXml( cout );
 
-    // cout << halfadder->getName() << endl;
   }
 
   return 0;
