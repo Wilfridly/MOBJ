@@ -35,6 +35,9 @@ namespace Netlist{
             static_cast<Cell*>(owner_)->remove(this);
         }
         else static_cast<Instance*>(owner_)->remove(this);
+        // std::vector<Net*> netss = this->getNets();
+        // while ( not netss_.empty() ) delete *netss_.begin();
+
     }
                 
     std::string Term::toString (Type t){

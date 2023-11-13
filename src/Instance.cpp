@@ -16,10 +16,17 @@ namespace Netlist{
         position_ = Point(0,0);
         owner_->add(this);
         // std::cout << "Debug::Instance CTOR" << std::endl;
+
+        std::vector<Term*> terms = model->getTerms();
+
+        for ( std::vector<Term*>::const_iterator it = terms.begin() ; it != terms.end() ; ++it ) {
+            new Term(this, *it);
+        }
     }
     
     Instance::~Instance(){
         owner_->remove(this);
+        while (not terms_.empty()) delete *terms_.begin();
     }
 
     //Accessseurs
@@ -50,6 +57,7 @@ namespace Netlist{
     }
 
     void  Instance::add           ( Term* term){
+        if(getTerm(term->getName())!= NULL) return;
         terms_.push_back(term);
     }
 
