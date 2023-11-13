@@ -24,25 +24,11 @@ namespace Netlist{
     }  
     
     //Accesseurs
-    Cell* Net::getCell() const{
-        return owner_;
-    }
-
-    const std::string& Net::getName() const{
-        return name_;
-    }
-
-    unsigned int Net::getId() const{
-        return id_;
-    }
-
-    Term::Type Net::getType() const{
-        return type_;
-    }
-
-    const std::vector<Node*>& Net::getNodes() const{
-        return nodes_;
-    }
+    Cell* Net::getCell()                        const{return owner_;}
+    const std::string& Net::getName()           const{return name_;}
+    unsigned int Net::getId()                   const{return id_;}
+    Term::Type Net::getType()                   const{return type_;}
+    const std::vector<Node*>& Net::getNodes()   const{return nodes_;}
     
     size_t Net::getFreeNodeId () const{
         for(size_t i = 0; i < nodes_.size();i++){

@@ -18,7 +18,6 @@ namespace Netlist{
         // std::cout << "Debug::Instance CTOR" << std::endl;
 
         std::vector<Term*> terms = model->getTerms();
-
         for ( std::vector<Term*>::const_iterator it = terms.begin() ; it != terms.end() ; ++it ) {
             new Term(this, *it);
         }
@@ -30,13 +29,10 @@ namespace Netlist{
     }
 
     //Accessseurs
-    const std::string& Instance::getName() const{return name_;}
-
-    Cell* Instance::getMasterCell () const{return masterCell_;}
-
-    Cell* Instance::getCell() const{return owner_;}
-
-    const std::vector<Term*>& Instance::getTerms() const{return terms_;}
+    const std::string& Instance::getName()          const{return name_;}
+    Cell* Instance::getMasterCell       ()          const{return masterCell_;}
+    Cell* Instance::getCell             ()          const{return owner_;}
+    const std::vector<Term*>& Instance::getTerms()  const{return terms_;}
 
 
     Term* Instance::getTerm( const std::string& name) const{

@@ -82,7 +82,9 @@ namespace Netlist{
         if(net == NULL){
             net_ = NULL;
             if(node_.getId() != Node::noid)
-                net_->remove(&node_); 
+                net_->remove(&node_);
+            if(type_ == External) 
+                static_cast<Cell*>(owner_)->remove(net); 
         }
         else{
             net_ = net;
@@ -97,8 +99,8 @@ namespace Netlist{
             std::cout << "[ERROR]" << name << " non trouvé " << std::endl;
             exit(1);
         }
-        net_ = net;
         net_->add(&node_);
+        net_ = net;
     }
 
 

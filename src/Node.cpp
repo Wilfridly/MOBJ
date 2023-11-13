@@ -33,12 +33,13 @@ namespace Netlist {
 
 // Node::toXml() à écrire ici.
   void  Node::toXml ( std::ostream& stream ){
-      stream << "<node term=\"" << term_->getName()  << "\" " << " id=\"" << getId();
-      stream << "\"" << " x=\"" << position_.getX() << "\""<< " y=\"" << position_.getY() << "\">\n";
     if(term_->isInternal()==true){
       stream << "<node term=\"" << term_->getName()  << "\" " << " instance=\"" << term_->getInstance()->getName();
       stream << "\"" << " id=\"" << getId() << "\"" << " x=\"" << position_.getX() << "\""<< " y=\"" << position_.getY() << "\">\n";
     }
+    else{
+      stream << "<node term=\"" << term_->getName()  << "\" " << " id=\"" << getId();
+      stream << "\"" << " x=\"" << position_.getX() << "\""<< " y=\"" << position_.getY() << "\">\n";
+    }
   }
-
 }  // Netlist namespace.
