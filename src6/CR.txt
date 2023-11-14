@@ -1,0 +1,64 @@
+TME 4 & 5 fait par Wilfrid LYAUTEY en master SESI.
+
+Question 1 :
+Implémentation des classes term,net et instance.
+Compilation réussite en ne méttant rien dans les entêtes.
+Implémentation classe par classe de l'ensemble des définitions des fonctions membres.
+Cmpilation réussite.
+
+Question 2 :
+Implémentation des toXml() réussite.
+
+Question 3 : 
+Description du full adder :
+
+Construction du modele <fulladder>.
+<?xml version=1.0?>
+<cell name="fulladder">
+  <terms>
+    <term name="a" direction="In"/>
+    <term name="b" direction="In"/>
+    <term name="cin" direction="In"/>
+    <term name="sout" direction="Out"/>
+    <term name="cout" direction="Out"/>
+  </terms>
+  <instances>
+    <instance name="halfadder_1" mastercell="halfadder" x="0" y="0"/>
+    <instance name="halfadder_2" mastercell="halfadder" x="0" y="0"/>
+    <instance name="or2_1" mastercell="or2" x="0" y="0"/>
+  </instances>
+  <nets>
+    <net name="a" type="External"/>
+      <node term="a"  id="0" x="0" y="0">
+      <node term="a"  instance="halfadder_1" id="1" x="0" y="0">
+    </net>
+    <net name="b" type="External"/>
+      <node term="b"  id="0" x="0" y="0">
+      <node term="b"  instance="halfadder_1" id="1" x="0" y="0">
+    </net>
+    <net name="cin" type="External"/>
+      <node term="cin"  id="0" x="0" y="0">
+      <node term="a"  instance="halfadder_2" id="1" x="0" y="0">
+    </net>
+    <net name="sout" type="External"/>
+      <node term="sout"  id="0" x="0" y="0">
+      <node term="sout"  instance="halfadder_2" id="1" x="0" y="0">
+    </net>
+    <net name="cout" type="External"/>
+      <node term="cout"  id="0" x="0" y="0">
+      <node term="q"  instance="or2_1" id="1" x="0" y="0">
+    </net>
+    <net name="sout_1" type="Internal"/>
+      <node term="sout"  instance="halfadder_1" id="0" x="0" y="0">
+      <node term="b"  instance="halfadder_2" id="1" x="0" y="0">
+    </net>
+    <net name="carry_1" type="Internal"/>
+      <node term="cout"  instance="halfadder_1" id="0" x="0" y="0">
+      <node term="i0"  instance="or2_1" id="1" x="0" y="0">
+    </net>
+    <net name="carry_2" type="Internal"/>
+      <node term="cout"  instance="halfadder_2" id="0" x="0" y="0">
+      <node term="i1"  instance="or2_1" id="1" x="0" y="0">
+    </net>
+  </nets>
+</cell>
