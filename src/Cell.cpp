@@ -165,8 +165,8 @@ namespace Netlist {
   // Cell::toXml() à écrire ici...
   void  Cell::toXml ( std::ostream& stream )
   {
-    stream   <<"<?xml version=""1.0""?>" << "\n";
-    stream   <<  "<cell name=\"" << name_ << "\">\n";
+    stream  << indent <<"<?xml version=""1.0""?>" << "\n";
+    stream  << indent <<"<cell name=\"" << name_ << "\">\n";
     stream   << ++indent <<"<terms>\n";
 
     ++indent;
@@ -185,7 +185,7 @@ namespace Netlist {
     --indent;
 
     stream << indent << "</instances>\n";
-    stream << indent << "<nets>";
+    stream << indent << "<nets>\n";
 
     ++indent;
     for ( std::vector<Net*>::iterator it = nets_.begin() ; it != nets_.end() ; ++it ) {
@@ -193,9 +193,9 @@ namespace Netlist {
     }
     --indent;
 
-
-    stream << "</cell>\n";
-
+    // indent++;
+    stream << indent << "</nets>\n";
+    stream << --indent <<"</cell>\n";
 
   }
 

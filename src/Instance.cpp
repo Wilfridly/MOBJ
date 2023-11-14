@@ -8,7 +8,7 @@
 #include "Net.h"
 
 namespace Netlist{
-    Instance::Instance( Cell* owner, Cell* model, const std::string& name){
+    Instance::Instance( Cell* owner, Cell* model, const std::string& name){ //ctor
         owner_ = owner;
         masterCell_ = model;
         name_ = name;
@@ -17,13 +17,13 @@ namespace Netlist{
         owner_->add(this);
         // std::cout << "Debug::Instance CTOR" << std::endl;
 
-        std::vector<Term*> terms = model->getTerms();
+        std::vector<Term*> terms = model->getTerms(); //création d'un term et emplacement dans terms
         for ( std::vector<Term*>::const_iterator it = terms.begin() ; it != terms.end() ; ++it ) {
             new Term(this, *it);
         }
     }
     
-    Instance::~Instance(){
+    Instance::~Instance(){ //dtor
         owner_->remove(this);
         while (not terms_.empty()) delete *terms_.begin();
     }

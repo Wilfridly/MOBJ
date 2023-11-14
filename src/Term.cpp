@@ -10,7 +10,7 @@
 
 
 namespace Netlist{
-    Term::Term (Cell* cell,const std::string& name, Direction d):node_(this,Node::noid){
+    Term::Term (Cell* cell,const std::string& name, Direction d):node_(this,Node::noid){ //ctor
         owner_ = static_cast<void*>(cell); //static cast
         name_ = name;
         direction_ = d;
@@ -20,7 +20,7 @@ namespace Netlist{
         // std::cout << "Debug::Term CTOR : " << name_ << std::endl;
     }
 
-    Term::Term ( Instance* instance, const Term* modelTerm ):node_(this,Node::noid){
+    Term::Term ( Instance* instance, const Term* modelTerm ):node_(this,Node::noid){ //ctor2
         owner_ = static_cast<void*>(instance);
         name_ = modelTerm->name_;
         direction_ = modelTerm->direction_;
@@ -30,7 +30,7 @@ namespace Netlist{
         // std::cout << "Debug::Term2 CTOR" << std::endl;
     }
 
-    Term::~Term (){
+    Term::~Term (){ //dtor
         if(type_ == External){
             static_cast<Cell*>(owner_)->remove(this);
         }
@@ -71,7 +71,7 @@ namespace Netlist{
 
     //Prédicats et accesseurs
 
-    Cell* Term::getOwnerCell () const{
+    Cell* Term::getOwnerCell () const{ //si cell, renvoie l'owner, sinon on cherche l'owner par instance
         if(type_ == External) return static_cast<Cell*>(owner_);
         if(type_ == Internal) return static_cast<Instance*>(owner_)->getCell();
         else return NULL;
@@ -79,14 +79,14 @@ namespace Netlist{
 
     // Modificateurs
     void Term::setNet( Net* net){
-        if(net == NULL){
+        if(net == NULL){ //test si le net existe
             net_ = NULL;
             if(node_.getId() != Node::noid)
                 net_->remove(&node_);
             if(type_ == External) 
                 static_cast<Cell*>(owner_)->remove(net); 
         }
-        else{
+        else{ //set le net
             net_ = net;
             net_->add(&node_);
         }
@@ -94,12 +94,12 @@ namespace Netlist{
 
     void  Term::setNet( const std::string& name){
         Net* net = getOwnerCell()->getNet(name);
-        
-        if(net == NULL){
-            std::cout << "[ERROR]" << name << " non trouvé " << std::endl;
+        if(net == NULL){ //test si le net existe
+            // std::cout << "[ERROR]" << name << " non trouvé " << std::endl;
             exit(1);
         }
-        net_->add(&node_);
+        //set le net
+        net_->add(&node_); 
         net_ = net;
     }
 

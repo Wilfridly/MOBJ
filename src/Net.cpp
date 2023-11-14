@@ -8,7 +8,7 @@
 
 
 namespace Netlist{
-    Net::Net( Cell* owner, const std::string& name, Term::Type t ){
+    Net::Net( Cell* owner, const std::string& name, Term::Type t ){ //ctor
         owner_ = owner;
         name_ = name;
         id_ = Node::noid;
@@ -18,7 +18,7 @@ namespace Netlist{
         // std::cout << "debug::Net CTOR" << std::endl;
     }
     
-    Net::~Net(){
+    Net::~Net(){ //dtor
         owner_->remove(this);
         // std::cout << "debug::Net::dtor NET" << std::endl;
     }  
@@ -30,7 +30,7 @@ namespace Netlist{
     Term::Type Net::getType()                   const{return type_;}
     const std::vector<Node*>& Net::getNodes()   const{return nodes_;}
     
-    size_t Net::getFreeNodeId () const{
+    size_t Net::getFreeNodeId () const{ //recherche d'une place libre
         for(size_t i = 0; i < nodes_.size();i++){
             if(nodes_[i]== NULL) {
                 // std::cout<< "debug::Net::getFreeNodeId ()"<< std::endl;
@@ -43,6 +43,8 @@ namespace Netlist{
 
     //Modificateurs 
     void  Net::add( Node* node){
+
+        //Methode avec pushback
         // std::cout<<"node added with sucess"<<std::endl;
         // if(node->getId() != Node::noid) 
         //     nodes_[node->getId()];
@@ -58,8 +60,9 @@ namespace Netlist{
         //     }           
         // }
 
+        // Methode avec insert
         size_t indice = node->getId();
-        if(indice == Node::noid){
+        if(indice == Node::noid){ //si Id = 0, ajouter sur le noeud
             indice = getFreeNodeId();
             nodes_.insert(nodes_.begin()+indice,node);
             node->setId(indice);
@@ -67,10 +70,9 @@ namespace Netlist{
         else{
             nodes_.insert(nodes_.begin()+indice,node);
         }
-        std::cout << "debug::Net::add(Node* node)" << std::endl;
     }
     
-    bool  Net::remove( Node* node){
+    bool  Net::remove( Node* node){ //enlever un noeud
         for(size_t i = 0; i < nodes_.size();i++){
             if(nodes_[i] == node){
                 node->setId(Node::noid);
@@ -85,11 +87,13 @@ namespace Netlist{
     }
 
     void  Net::toXml ( std::ostream& stream ){
-        stream << --indent << "<net name=\"" << name_ << "\" type=\"" << Term::toString(type_) << "\"/>\n";
-        indent++;
-        
+        stream << indent << "<net name=\"" << name_ << "\" type=\"" << Term::toString(type_) << "\"/>\n";
+        ++indent;
         for(std::vector<Node*>::iterator it = nodes_.begin() ; it != nodes_.end() ; ++it ){
             (*it)->toXml(std::cout);
         }    
+        --indent;
+        stream << indent << "</net>\n";
+
     }
 }
