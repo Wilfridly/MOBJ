@@ -42,4 +42,23 @@ namespace Netlist {
       stream << "\"" << " x=\"" << position_.getX() << "\""<< " y=\"" << position_.getY() << "\">\n";
     }
   }
+
+  bool Node::fromXml(Net* net, xmlTextReaderPtr reader){ //Non fini
+    const std::string termName = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"term"));
+    const std::string instName = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"instance"));
+    const std::string id =       xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"id"));
+    
+    if(termName.empty()||id.empty()) return false;
+    
+    // if(instName.empty()){
+    //   net->getCell()->getTerm(termName)->getNode()->setId(atoi(id.c_str()));
+    //   net->getCell()->connect(termName,net);
+    // }
+    // else{
+    //   net->getCell()->getTerm(instName)->getNode()->setId(atoi(id.c_str()));
+    //   net->getCell()->connect(instName,net);
+    // }
+    return true;
+
+  }
 }  // Netlist namespace.

@@ -1,0 +1,15 @@
+TME 6 fait par Wilfrid LYAUTEY en master SESI.
+
+Question 1 :
+Implémentation de fromxml dans la classe term réussie.
+
+Question 2 :
+Implémentation de fromxml dans la classe instance réussie.
+
+Question 3 :
+
+Implémentation non réussie. 
+
+Question 4 : 
+
+Implémentation non réussie.

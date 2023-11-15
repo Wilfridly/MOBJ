@@ -1,5 +1,3 @@
-// -*- explicit-buffer-name: "Indentation.h<M1-MOBJ/4-5>" -*-
-
 #ifndef  NETLIST_INDENTATION_H
 #define  NETLIST_INDENTATION_H
 

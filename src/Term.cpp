@@ -2,12 +2,13 @@
 #include <string>
 #include <stdlib.h>
 
+
 #include "Cell.h"
 #include "Term.h"
 #include "Point.h"
 #include "Instance.h"
 #include "Net.h"
-
+#include "XmlUtil.h"
 
 namespace Netlist{
     Term::Term (Cell* cell,const std::string& name, Direction d):node_(this,Node::noid){ //ctor
@@ -113,7 +114,27 @@ namespace Netlist{
     }
     
     void  Term::toXml ( std::ostream& stream ){
-        stream << indent << "<term name=\"" << name_ << "\" direction=\"" << toString(direction_) << "\"/>\n";    
+        stream << indent << "<term name=\"" << name_ << "\" direction=\"" << toString(direction_) << "\" x=\"" << getPosition().getX() << "\" y=\""<< getPosition().getY() << "\"/> \n" ;    
     }
 
+    Term* Term::fromXml(Cell* cell, xmlTextReaderPtr reader)
+    {
+        const std::string termName =        xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"name"));
+        const std::string termdirection =   xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"direction"));
+        const std::string termX =           xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"x"));
+        const std::string termY =           xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"y"));
+
+        Term::Direction d = toDirection(termdirection);
+
+        Term* term = new Term(cell, termName, d);
+
+        term->setPosition(atoi(termX.c_str()),atoi(termY.c_str()));
+        
+        std::cout << "ca marche "<< std::endl;
+        
+        if(termName.empty())
+            return NULL;
+        
+        return term;
+    }
 }

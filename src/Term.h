@@ -2,6 +2,8 @@
 #define NETLIST_TERM_H
 
 #include <string>
+#include  <libxml/xmlreader.h>
+
 #include "Point.h"
 #include "Node.h"
 
@@ -36,7 +38,8 @@ namespace Netlist {
             inline Point              getPosition  () const {return Point();}
             inline Type               getType      () const {return type_;}
                 
-                void        toXml        ( std::ostream& stream );
+            void                      toXml        ( std::ostream& stream );
+            static Term*              fromXml      ( Cell*, xmlTextReaderPtr);
             //Modificateurs
                 void        setNet       ( Net* );
                 void        setNet       ( const std::string& );

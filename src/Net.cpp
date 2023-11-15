@@ -1,10 +1,14 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
+#include  <libxml/xmlreader.h>
+
 #include "Term.h"
 #include "Cell.h"
 #include "Net.h"
 #include "Node.h"
+#include  "XmlUtil.h"
+
 
 
 namespace Netlist{
@@ -95,5 +99,46 @@ namespace Netlist{
         --indent;
         stream << indent << "</net>\n";
 
+    }
+
+    Net* Net::fromXml( Cell* cell, xmlTextReaderPtr reader){ //NON FINI
+        
+        const std::string name = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"name"));
+        const std::string type = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"type"));
+        const xmlChar* nodeTag = xmlTextReaderConstString(reader,(const xmlChar*)"node");
+
+        Term::Type t;
+
+        (type == "Internal" )? t = Term::Internal : t = Term::External;
+
+        Net* net = new Net(cell,name,t);
+        
+        if(name.empty()||type.empty()) return NULL;
+        
+        while(true){
+            int status = xmlTextReaderRead(reader);
+            if (status != 1) {
+                if (status != 0) {
+                    std::cout << "[ERROR] Cell::fromXml(): Unexpected termination of the XML parser." << std::endl;
+                }
+                break;
+            }
+            switch ( xmlTextReaderNodeType(reader) ) {
+                case XML_READER_TYPE_COMMENT:
+                case XML_READER_TYPE_WHITESPACE:
+                case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
+                continue;
+            }
+
+            const xmlChar* nodeName = xmlTextReaderConstLocalName( reader );
+            if(nodeName == nodeTag){
+                // if(Node::fromXml(net,reader)) 
+                    continue;
+            }
+            else
+                break;
+        }
+        
+        return net;
     }
 }

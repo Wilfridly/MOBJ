@@ -1,11 +1,11 @@
-// -*- explicit-buffer-name: "Cell.h<M1-MOBJ/4-5>" -*-
-
 #ifndef NETLIST_CELL_H
 #define NETLIST_CELL_H
 
 #include <string>
 #include <vector>
+#include  <libxml/xmlreader.h>
 #include "Indentation.h"
+#include "XmlUtil.h"
 
 namespace Netlist {
 
@@ -18,6 +18,12 @@ namespace Netlist {
     public:
       static       std::vector<Cell*>&     getAllCells       ();
       static       Cell*                   find              ( const std::string& );
+      static       Cell*                   fromXml           ( xmlTextReaderPtr);
+      static       Cell*                   load              ( const std::string& );
+                   void                    save              () const;
+                   void                    toXml             ( std::ostream& stream )const;
+
+
     public:                                                  
                                            Cell              ( const std::string& );
                                           ~Cell              ();
@@ -37,7 +43,7 @@ namespace Netlist {
                    void                    remove            ( Net* );
                    bool                    connect           ( const std::string& name, Net* net );
                    unsigned int            newNetId          ();
-                   void                    toXml             ( std::ostream& stream );
+
     private:
       static  std::vector<Cell*>      cells_;
               std::string             name_;

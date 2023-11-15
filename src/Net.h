@@ -28,10 +28,13 @@ namespace Netlist{
             Term::Type                getType       () const;
             const std::vector<Node*>& getNodes      () const;
             size_t                    getFreeNodeId () const;
-            void                      toXml         ( std::ostream& stream );
+            
             //Modificateurs 
             void  add    ( Node* );
             bool  remove ( Node* );
+            //gestionnaire des xmls
+            static Net* fromXml( Cell*, xmlTextReaderPtr);
+                   void toXml  ( std::ostream& stream   );
     };
 }
 #endif 

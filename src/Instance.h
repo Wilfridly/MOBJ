@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include  <libxml/xmlreader.h>
 
 #include "Cell.h"
 #include "Term.h"
@@ -31,13 +32,16 @@ namespace Netlist{
             const std::vector<Term*>& getTerms      () const;
             Term*                     getTerm       ( const std::string& ) const;
             Point                     getPosition   () const;
-            void                      toXml         ( std::ostream& stream );
+            
             //Modificateurs
             bool  connect       ( const std::string& name, Net* );
             void  add           ( Term* );
             void  remove        ( Term* );
             void  setPosition   ( const Point& );
             void  setPosition   ( int x, int y );
+            //gestionnaire xml
+                   void      toXml  ( std::ostream& stream );
+            static Instance* fromXml( Cell*, xmlTextReaderPtr);
     };
 }
 #endif

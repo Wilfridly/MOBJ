@@ -74,4 +74,21 @@ namespace Netlist{
     void  Instance::toXml ( std::ostream& stream ){
         stream << indent << "<instance name=\"" << name_ << "\" mastercell=\"" << masterCell_->getName() << "\"" <<" x=\"" << position_.getX() << "\" y=\"" << position_.getY() << "\"/>\n";
     }
+
+
+    Instance* Instance::fromXml(Cell* cell, xmlTextReaderPtr reader)
+    {
+        const std::string name =            xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"name"));
+        const std::string mastername =      xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"mastercell"));
+        const std::string instX =           xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"x"));
+        const std::string instY =           xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"y"));
+
+        Cell* mastercell = Cell::find(mastername);
+        Instance* inst = new Instance(cell,mastercell, name);
+        inst->setPosition(atoi(instX.c_str()),atoi(instY.c_str()));
+        
+        if(name.empty()||mastername.empty()||instX.empty()||instY.empty())
+            return NULL;
+        return inst;
+    }
 }

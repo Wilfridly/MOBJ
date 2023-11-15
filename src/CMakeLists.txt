@@ -9,9 +9,11 @@
  set (CMAKE_CXX_FLAGS            "-Wall -g" CACHE STRING "C++ Compiler Release options." FORCE)
  set (CMAKE_INSTALL_PREFIX       "../install" )
 
+# Detection de LibXml2.
+ find_package(LibXml2)
 
-    include_directories( ${SCHEMATIC_SOURCE_DIR}
-                       )
+    include_directories(   ${SCHEMATIC_SOURCE_DIR} ${LIBXML2_INCLUDE_DIR}
+                        )
 
                     set( includes     Indentation.h
                                       Term.h
@@ -20,6 +22,7 @@
                                       Point.h
                                       Node.h
                                       Cell.h
+                                      XmlUtil.h
                        )
 
                     set( cpps         Indentation.cpp
@@ -30,8 +33,10 @@
                                       Node.cpp
                                       Cell.cpp
                                       Main.cpp
+                                      XmlUtil.cpp
                        )
 
-        add_executable ( tme45        ${cpps} )
-               install ( TARGETS      tme45        DESTINATION bin )
+        add_executable ( tme6        ${cpps} )
+               install ( TARGETS      tme6        DESTINATION bin )
                install ( FILES        ${includes}  DESTINATION include )
+        target_link_libraries ( tme6 ${LIBXML2_LIBRARIES} )
