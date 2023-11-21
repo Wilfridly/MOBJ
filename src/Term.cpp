@@ -89,6 +89,7 @@ namespace Netlist{
         }
         else{ //set le net
             net_ = net;
+            std::cout << "ça marche le set net ?" << std::endl;
             net_->add(&node_);
         }
     }
@@ -100,7 +101,7 @@ namespace Netlist{
             exit(1);
         }
         //set le net
-        net_->add(&node_); 
+        net_->add(&node_);
         net_ = net;
     }
 

@@ -131,6 +131,8 @@ namespace Netlist {
     // cout << "Debug Cell::Connect" << endl;
     Term* term = getTerm( name );
     if (term == NULL) return false;
+    std::cout << "ça marche ?" << std::endl;
+
     term->setNet( net );
     return true;
   }

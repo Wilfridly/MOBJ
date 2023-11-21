@@ -48,22 +48,6 @@ namespace Netlist{
     //Modificateurs 
     void  Net::add( Node* node){
 
-        //Methode avec pushback
-        // std::cout<<"node added with sucess"<<std::endl;
-        // if(node->getId() != Node::noid) 
-        //     nodes_[node->getId()];
-        // else{
-        //     size_t indice = getFreeNodeId();
-        //     if (nodes_.size() != indice){ 
-        //         nodes_[indice]= node;
-        //         node->setId(indice);
-        //     }
-        //     else{
-        //         nodes_.push_back(node);
-        //         node->setId(indice);   
-        //     }           
-        // }
-
         // Methode avec insert
         size_t indice = node->getId();
         if(indice == Node::noid){ //si Id = 0, ajouter sur le noeud
@@ -72,6 +56,7 @@ namespace Netlist{
             node->setId(indice);
         }
         else{
+            nodes_.resize(indice);
             nodes_.insert(nodes_.begin()+indice,node);
         }
     }
@@ -91,30 +76,35 @@ namespace Netlist{
     }
 
     void  Net::toXml ( std::ostream& stream ){
-        stream << indent << "<net name=\"" << name_ << "\" type=\"" << Term::toString(type_) << "\"/>\n";
+        stream << indent << "<net name=\"" << name_ << "\" type=\"" << Term::toString(type_) << "\">\n";
         ++indent;
         for(std::vector<Node*>::iterator it = nodes_.begin() ; it != nodes_.end() ; ++it ){
-            (*it)->toXml(std::cout);
+            if((*it) != NULL)
+                (*it)->toXml(std::cout);
         }    
         --indent;
         stream << indent << "</net>\n";
 
     }
 
+
     Net* Net::fromXml( Cell* cell, xmlTextReaderPtr reader){ //NON FINI
-        
-        const std::string name = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"name"));
-        const std::string type = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"type"));
+        Net* net = NULL;
+       
         const xmlChar* nodeTag = xmlTextReaderConstString(reader,(const xmlChar*)"node");
+        std::string name = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"name"));
+        std::string type = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"type"));
 
         Term::Type t;
 
-        (type == "Internal" )? t = Term::Internal : t = Term::External;
+        (type == "Internal" ) ? t = Term::Internal : t = Term::External;
 
-        Net* net = new Net(cell,name,t);
+        net = new Net(cell,name,t);
         
         if(name.empty()||type.empty()) return NULL;
+
         
+
         while(true){
             int status = xmlTextReaderRead(reader);
             if (status != 1) {
@@ -123,6 +113,7 @@ namespace Netlist{
                 }
                 break;
             }
+
             switch ( xmlTextReaderNodeType(reader) ) {
                 case XML_READER_TYPE_COMMENT:
                 case XML_READER_TYPE_WHITESPACE:
@@ -131,14 +122,15 @@ namespace Netlist{
             }
 
             const xmlChar* nodeName = xmlTextReaderConstLocalName( reader );
+
             if(nodeName == nodeTag){
-                // if(Node::fromXml(net,reader)) 
+                if(Node::fromXml(net,reader)) {
+                    std::cout << "AYAYA" << std::endl;
                     continue;
+                }
             }
-            else
-                break;
+            break;
         }
-        
         return net;
     }
 }

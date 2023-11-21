@@ -35,30 +35,36 @@ namespace Netlist {
   void  Node::toXml ( std::ostream& stream ){
     if(term_->isInternal()==true){
       stream << indent <<"<node term=\"" << term_->getName()  << "\" " << " instance=\"" << term_->getInstance()->getName();
-      stream << "\"" << " id=\"" << getId() << "\"" << " x=\"" << position_.getX() << "\""<< " y=\"" << position_.getY() << "\">\n";
+      stream << "\"" << " id=\"" << getId() << "\"/>\n";
     }
     else{
       stream << indent << "<node term=\"" << term_->getName()  << "\" " << " id=\"" << getId();
-      stream << "\"" << " x=\"" << position_.getX() << "\""<< " y=\"" << position_.getY() << "\">\n";
+      stream << "\"/>\n";
     }
   }
 
   bool Node::fromXml(Net* net, xmlTextReaderPtr reader){ //Non fini
     const std::string termName = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"term"));
     const std::string instName = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"instance"));
-    const std::string id =       xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"id"));
+    const std::string id       = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"id"));
+        
     
-    if(termName.empty()||id.empty()) return false;
-    
-    // if(instName.empty()){
-    //   net->getCell()->getTerm(termName)->getNode()->setId(atoi(id.c_str()));
-    //   net->getCell()->connect(termName,net);
-    // }
-    // else{
-    //   net->getCell()->getTerm(instName)->getNode()->setId(atoi(id.c_str()));
-    //   net->getCell()->connect(instName,net);
-    // }
-    return true;
+    if(instName.empty()){
+      std::cout << "non" << std::endl;
+      net->getCell()->getTerm(termName)->getNode()->setId(atoi(id.c_str()));
+      std::cout << "non" << std::endl;
+      
+      if(net->getCell()->connect(termName,net) != true) return false;
+      std::cout << "non" << std::endl;
 
+    }
+    else{
+      std::cout << "oui" << std::endl;
+      net->getCell()->getInstance(instName)->getTerm(termName)->getNode()->setId(atoi(id.c_str()));
+      if(net->getCell()->getInstance(instName)->connect(termName,net) != true) return false;
+    }
+    std::cout << "oui2" << std::endl;
+
+    return true;
   }
 }  // Netlist namespace.

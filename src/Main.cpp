@@ -12,7 +12,7 @@ using namespace Netlist;
 
 int main ( int argc, char* argv[] )
 {
-  // {
+  
   //   cout << "\nConstruction du modele <and2>." << endl;
   //   Cell* and2 = new Cell ( "and2" );
   //   new Term( and2, "i0", Term::In  );
@@ -122,6 +122,7 @@ int main ( int argc, char* argv[] )
 
     cout << "\nContenu du <halfadder>:" << endl;
     halfadder->toXml( cout );
+    halfadder->save();
     return 0;
 }
 
