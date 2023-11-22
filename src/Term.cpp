@@ -131,7 +131,6 @@ namespace Netlist{
 
         term->setPosition(atoi(termX.c_str()),atoi(termY.c_str()));
         
-        std::cout << "ca marche "<< std::endl;
         
         if(termName.empty())
             return NULL;

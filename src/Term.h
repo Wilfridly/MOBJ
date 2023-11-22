@@ -29,7 +29,7 @@ namespace Netlist {
             inline bool               isInternal   () const{return (type_ == Internal) ? true : false;}
             inline bool               isExternal   () const{return (type_ == External) ? true : false;}
             inline const std::string& getName      () const{return name_;}
-            inline Node*              getNode      () {return &node_;}
+            inline NodeTerm*          getNode      () {return &node_;}
             inline Net*               getNet       () const {return net_;}
             inline Cell*              getCell      () const {return (type_ == External) ? static_cast<Cell*>(owner_) : NULL;}
                    Cell*              getOwnerCell () const;
@@ -52,7 +52,7 @@ namespace Netlist {
             Direction     direction_;
             Type          type_;
             Net*          net_;
-            Node          node_;
+            NodeTerm      node_;
     };
 }
 #endif 

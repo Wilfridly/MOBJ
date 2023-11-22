@@ -7,6 +7,7 @@
 #include "Cell.h"
 #include "Term.h"
 #include "Node.h"
+#include "Line.h"
 
 namespace Netlist{
     class Net{
@@ -16,6 +17,7 @@ namespace Netlist{
             unsigned int        id_;
             Term::Type          type_;
             std::vector<Node*>  nodes_;
+            std::vector<Line*> lines_;
         public : 
             //constructeur & destructeur
             Net     ( Cell*, const std::string&, Term::Type ); 
@@ -31,10 +33,14 @@ namespace Netlist{
             
             //Modificateurs 
             void  add    ( Node* );
+            void  add    ( Line* ); //TME7
             bool  remove ( Node* );
+            bool  remove ( Line* );
+            inline const std::vector<Line*>& Net::getLines () const { return lines_;} //TME7
+            
             //gestionnaire des xmls
             static Net* fromXml( Cell*, xmlTextReaderPtr);
-                   void toXml  ( std::ostream& stream   );
+                   void toXml  ( std::ostream& stream   ); 
     };
 }
 #endif 

@@ -60,6 +60,10 @@ namespace Netlist{
             nodes_.insert(nodes_.begin()+indice,node);
         }
     }
+    void Net::add ( Line* line ){
+        if (line) lines_.push_back( line ); 
+    }
+
     
     bool  Net::remove( Node* node){ //enlever un noeud
         for(size_t i = 0; i < nodes_.size();i++){
@@ -75,12 +79,24 @@ namespace Netlist{
         return false;
     }
 
-    void  Net::toXml ( std::ostream& stream ){
+    bool Net::remove ( Line* line ){
+        if (line) {
+            for ( vector<Line*>::iterator il = lines_.begin(); il != lines_.end() ; ++il ) {
+                if (*il == line) {
+                    lines_.erase( il );
+                    return true;
+                }
+            }
+        }
+    return false;
+    }
+
+    void  Net::toXml ( std::ostream& stream ){ // A MODIFIER
         stream << indent << "<net name=\"" << name_ << "\" type=\"" << Term::toString(type_) << "\">\n";
         ++indent;
         for(std::vector<Node*>::iterator it = nodes_.begin() ; it != nodes_.end() ; ++it ){
             if((*it) != NULL)
-                (*it)->toXml(std::cout);
+                (*it)->toXml(stream);
         }    
         --indent;
         stream << indent << "</net>\n";
@@ -88,7 +104,7 @@ namespace Netlist{
     }
 
 
-    Net* Net::fromXml( Cell* cell, xmlTextReaderPtr reader){ //NON FINI
+    Net* Net::fromXml( Cell* cell, xmlTextReaderPtr reader){ //A MODIFIER
         Net* net = NULL;
        
         const xmlChar* nodeTag = xmlTextReaderConstString(reader,(const xmlChar*)"node");

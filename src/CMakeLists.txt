@@ -23,6 +23,10 @@
                                       Node.h
                                       Cell.h
                                       XmlUtil.h
+                                      Box.h
+                                      Line.h
+                                      Shape.h
+                                      Symbol.h
                        )
 
                     set( cpps         Indentation.cpp
@@ -34,9 +38,13 @@
                                       Cell.cpp
                                       Main.cpp
                                       XmlUtil.cpp
+                                      Box.cpp
+                                      Line.cpp
+                                      Shape.cpp
+                                      Symbol.cpp
                        )
 
-        add_executable ( tme6        ${cpps} )
-               install ( TARGETS      tme6        DESTINATION bin )
+        add_executable ( tme7        ${cpps} )
+               install ( TARGETS      tme7        DESTINATION bin )
                install ( FILES        ${includes}  DESTINATION include )
-        target_link_libraries ( tme6 ${LIBXML2_LIBRARIES} )
+        target_link_libraries ( tme7 ${LIBXML2_LIBRARIES} )

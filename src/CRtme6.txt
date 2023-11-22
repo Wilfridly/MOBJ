@@ -8,8 +8,23 @@ Implémentation de fromxml dans la classe instance réussie.
 
 Question 3 :
 
-Implémentation non réussie. 
+Implémentation réussie. 
 
 Question 4 : 
 
-Implémentation non réussie.
+Implémentation réussie.
+
+Question 5 : 
+
+Lignes qui ne sont pas identiques :
+
+> <?xml version=1.0?>
+4,7c4,7
+<term name="a" direction="In" x="0" y="120"/>
+<term name="b" direction="In" x="0" y="200"/>
+<term name="sout" direction="Out" x="300" y="80"/>
+<term name="cout" direction="Out" x="300" y="230"/>
+<term name="a" direction="In" x="0" y="0"/> 
+<term name="b" direction="In" x="0" y="0"/> 
+<term name="sout" direction="Out" x="0" y="0"/> 
+<term name="cout" direction="Out" x="0" y="0"/
