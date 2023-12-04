@@ -15,7 +15,6 @@ namespace Netlist {
   class Shape;
   class TermShape;
 
-
   class Symbol {
     public:
                                         Symbol          ( Cell* );

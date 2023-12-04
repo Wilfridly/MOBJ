@@ -18,6 +18,7 @@ namespace Netlist{
         id_ = Node::noid;
         type_ = t;
         nodes_ = std::vector<Node*>();
+        lines_ = std::vector<Line*>();
         owner_->add(this);
         // std::cout << "debug::Net CTOR" << std::endl;
     }
@@ -60,11 +61,7 @@ namespace Netlist{
             nodes_.insert(nodes_.begin()+indice,node);
         }
     }
-    void Net::add ( Line* line ){
-        if (line) lines_.push_back( line ); 
-    }
 
-    
     bool  Net::remove( Node* node){ //enlever un noeud
         for(size_t i = 0; i < nodes_.size();i++){
             if(nodes_[i] == node){
@@ -79,6 +76,10 @@ namespace Netlist{
         return false;
     }
 
+    void Net::add ( Line* line ){
+        if (line) lines_.push_back( line ); 
+    }
+
     bool Net::remove ( Line* line ){
         if (line) {
             for ( vector<Line*>::iterator il = lines_.begin(); il != lines_.end() ; ++il ) {
@@ -88,7 +89,7 @@ namespace Netlist{
                 }
             }
         }
-    return false;
+        return false;
     }
 
     void  Net::toXml ( std::ostream& stream ){ // A MODIFIER
@@ -102,7 +103,6 @@ namespace Netlist{
         stream << indent << "</net>\n";
 
     }
-
 
     Net* Net::fromXml( Cell* cell, xmlTextReaderPtr reader){ //A MODIFIER
         Net* net = NULL;
@@ -118,8 +118,6 @@ namespace Netlist{
         net = new Net(cell,name,t);
         
         if(name.empty()||type.empty()) return NULL;
-
-        
 
         while(true){
             int status = xmlTextReaderRead(reader);

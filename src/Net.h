@@ -33,8 +33,10 @@ namespace Netlist{
             
             //Modificateurs 
             void  add    ( Node* );
-            void  add    ( Line* ); //TME7
             bool  remove ( Node* );
+            
+            //Methodes TME7
+            void  add    ( Line* );
             bool  remove ( Line* );
             inline const std::vector<Line*>& Net::getLines () const { return lines_;} //TME7
             

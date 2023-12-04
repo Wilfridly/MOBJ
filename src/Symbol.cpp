@@ -28,7 +28,7 @@ namespace Netlist{
     }
     
     TermShape* Symbol::getTermShape    ( Term* ) const{
-        return term
+        // return term
     }
     void Symbol::add ( Shape* );
     
