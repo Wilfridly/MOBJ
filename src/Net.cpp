@@ -104,7 +104,7 @@ namespace Netlist{
 
     }
 
-    Net* Net::fromXml( Cell* cell, xmlTextReaderPtr reader){ //A MODIFIER
+    Net* Net::fromXml( Cell* cell, xmlTextReaderPtr reader){
         Net* net = NULL;
        
         const xmlChar* nodeTag = xmlTextReaderConstString(reader,(const xmlChar*)"node");

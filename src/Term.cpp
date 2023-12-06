@@ -126,15 +126,12 @@ namespace Netlist{
         const std::string termY =           xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"y"));
 
         Term::Direction d = toDirection(termdirection);
-
         Term* term = new Term(cell, termName, d);
 
         term->setPosition(atoi(termX.c_str()),atoi(termY.c_str()));
         
-        
         if(termName.empty())
             return NULL;
-        
         return term;
     }
 }
