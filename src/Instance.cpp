@@ -6,6 +6,7 @@
 #include "Term.h"
 #include "Point.h"
 #include "Net.h"
+#include "XmlUtil.h"
 
 namespace Netlist{
     Instance::Instance( Cell* owner, Cell* model, const std::string& name){ //ctor

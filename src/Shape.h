@@ -21,13 +21,13 @@ namespace Netlist {
 //BOXSHAPE
     class BoxShape : public Shape { 
         public :
-                                    BoxShape            ( Symbol*, const Box& );
-                                    BoxShape            ( Symbol*, int x1 , int y1 , int x2 , int y2 );
-                                    ~BoxShape           ();
-                Box                 getBoundingBox      () const ;
-        void                        toXml               ( std::ostream& stream )const;
-        static  Symbol*             fromXml             ( Symbol*, xmlTextReaderPtr);
-
+                                        BoxShape            ( Symbol*, const Box& );
+                                        BoxShape            ( Symbol*, int x1 , int y1 , int x2 , int y2 );
+                                        ~BoxShape           ();
+                    Box                 getBoundingBox      () const ;
+            void                        toXml               ( std::ostream& stream )const;
+            static  Shape*              fromXml             ( Symbol*, xmlTextReaderPtr);
+        
         private :
             Box box_;
     };
@@ -41,7 +41,7 @@ namespace Netlist {
     class TermShape : public Shape {
         public :
             enum NameAlign { TopLeft=1, TopRight, BottomLeft, BottomRight };
-                                TermShape       ( Symbol *, Term*, int, int);
+                                TermShape       ( Symbol *, Term*, int, int, NameAlign);
                                 ~TermShape      ();
                    Box          getBoundingBox  () const ;
             inline Term*        getTerm         () const{ return term_}
@@ -50,7 +50,7 @@ namespace Netlist {
             static std::string  toString        ( NameAlign );
             static NameAlign    toNameAlign     ( std::string );
             void                toXml           ( std::ostream& stream )const;
-            static  Symbol*     fromXml         ( Symbol*, xmlTextReaderPtr);
+            static  Shape*      fromXml         ( Symbol*, xmlTextReaderPtr);
 
         private :
             Term* term_ ;
@@ -69,7 +69,7 @@ namespace Netlist {
                                     ~LineShape      ();
                 Box                 getBoundingBox  () const ;
         void                        toXml           ( std::ostream& stream )const;
-        static  Symbol*             fromXml         ( Symbol*, xmlTextReaderPtr);
+        static  Shape*              fromXml         ( Symbol*, xmlTextReaderPtr);
         private :
             Symbol* owner_ ;
             int x1_ , y1_ , x2_ , y2_ ;
@@ -83,11 +83,11 @@ namespace Netlist {
     class EllipseShape : public Shape{
         public : 
                                         EllipseShape        ( Symbol*, const Box& );
-                                        EllipseShape        ( Symbol*, int x1 , int y1 , int x2 , int y2 );
+                                        // EllipseShape        ( Symbol*, int x1 , int y1 , int x2 , int y2 );
                                         ~EllipseShape       ();
                     Box                 getBoundingBox      () const ;
             void                        toXml               ( std::ostream& stream )const;
-            static  Symbol*             fromXml             ( Symbol*, xmlTextReaderPtr);
+            static  Shape*              fromXml             ( Symbol*, xmlTextReaderPtr);
         private :
             Box::Box box_;
     };
@@ -104,7 +104,7 @@ namespace Netlist {
                                         ~ArcShape       ();
                     Box                 getBoundingBox  () const ;
             void                        toXml           ( std::ostream& stream )const;
-            static  Symbol*             fromXml         ( Symbol*, xmlTextReaderPtr);
+            static  Shape*              fromXml         ( Symbol*, xmlTextReaderPtr);
         private :
             Box::Box box_;
             int start_;

@@ -7,7 +7,8 @@
 #include "Cell.h"
 #include "Net.h"
 #include "Node.h"
-#include  "XmlUtil.h"
+#include "XmlUtil.h"
+#include "Line.h"
 
 
 
@@ -66,7 +67,8 @@ namespace Netlist{
         for(size_t i = 0; i < nodes_.size();i++){
             if(nodes_[i] == node){
                 node->setId(Node::noid);
-                node->getTerm()->setNet(NULL);
+                NodeTerm* nodeterm = dynamic_cast< NodeTerm* >( node );		
+                nodeterm->getTerm()->setNet(NULL);
                 nodes_[i] = NULL;
                 // std::cout << "debug::Net::remove()true" << std::endl;
                 return true;
@@ -82,7 +84,7 @@ namespace Netlist{
 
     bool Net::remove ( Line* line ){
         if (line) {
-            for ( vector<Line*>::iterator il = lines_.begin(); il != lines_.end() ; ++il ) {
+            for ( std::vector<Line*>::iterator il = lines_.begin(); il != lines_.end() ; ++il ) {
                 if (*il == line) {
                     lines_.erase( il );
                     return true;
@@ -139,7 +141,7 @@ namespace Netlist{
 
             if(nodeName == nodeTag){
                 if(Node::fromXml(net,reader)) {
-                    std::cout << "AYAYA" << std::endl;
+                    std::cout << "le fromXml de node fonctionne" << std::endl;
                     continue;
                 }
             }
