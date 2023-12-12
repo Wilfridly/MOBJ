@@ -36,6 +36,14 @@ namespace Netlist{
     Term::Type Net::getType()                   const{return type_;}
     const std::vector<Node*>& Net::getNodes()   const{return nodes_;}
     
+    const Node* Net::getNode(int& id)const{
+        for(std::vector<Node*>::iterator it = nodes_.begin(); it != nodes_.end() ; ++it){
+            if(*it != NULL){
+                if(id == it->getId()) return *it;
+            }
+        }
+        return NULL;
+    }
     size_t Net::getFreeNodeId () const{ //recherche d'une place libre
         for(size_t i = 0; i < nodes_.size();i++){
             if(nodes_[i]== NULL) {
