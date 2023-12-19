@@ -12,8 +12,8 @@ namespace Netlist {
             virtual         ~Shape        ();
             virtual Box     getBoundingBox()const=0;
                     Symbol* getSymbol     ()const;
-            static          fromXml       ( Symbol*, xmlTextReaderPtr);
-            virtual         toXml         ( std::ostream& stream )const=0;
+            static  Shape*  fromXml       ( Symbol*, xmlTextReaderPtr);
+            virtual void    toXml         ( std::ostream& stream )const = 0;
         private:
             Symbol* owner_;
     };
@@ -27,7 +27,7 @@ namespace Netlist {
                     Box                 getBoundingBox      () const ;
             void                        toXml               ( std::ostream& stream )const;
             static  Shape*              fromXml             ( Symbol*, xmlTextReaderPtr);
-        
+
         private :
             Box box_;
     };
@@ -40,17 +40,17 @@ namespace Netlist {
 //TERMSHAPE
     class TermShape : public Shape {
         public :
-            enum NameAlign { TopLeft=1, TopRight, BottomLeft, BottomRight };
+            enum NameAlign { TopLeft=1, TopRight, BottomLeft, BottomRight, Unknown};
                                 TermShape       ( Symbol *, Term*, int, int, NameAlign);
                                 ~TermShape      ();
                    Box          getBoundingBox  () const ;
-            inline Term*        getTerm         () const{ return term_}
-            inline int          getX            () const{ return x_}
-            inline int          getY            () const{ return y_}
+            inline Term*        getTerm         () const{ return term_;}
+            inline int          getX            () const{ return x_;}
+            inline int          getY            () const{ return y_;}
             static std::string  toString        ( NameAlign );
             static NameAlign    toNameAlign     ( std::string );
             void                toXml           ( std::ostream& stream )const;
-            static  Shape*      fromXml         ( Symbol*, xmlTextReaderPtr);
+            static  Shape*      fromXml         ( Cell*, xmlTextReaderPtr);
 
         private :
             Term* term_ ;
@@ -71,7 +71,6 @@ namespace Netlist {
         void                        toXml           ( std::ostream& stream )const;
         static  Shape*              fromXml         ( Symbol*, xmlTextReaderPtr);
         private :
-            Symbol* owner_ ;
             int x1_ , y1_ , x2_ , y2_ ;
     };
 
@@ -89,7 +88,7 @@ namespace Netlist {
             void                        toXml               ( std::ostream& stream )const;
             static  Shape*              fromXml             ( Symbol*, xmlTextReaderPtr);
         private :
-            Box::Box box_;
+            Box box_;
     };
 
 
@@ -106,7 +105,7 @@ namespace Netlist {
             void                        toXml           ( std::ostream& stream )const;
             static  Shape*              fromXml         ( Symbol*, xmlTextReaderPtr);
         private :
-            Box::Box box_;
+            Box box_;
             int start_;
             int span_;
     };

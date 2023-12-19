@@ -27,7 +27,7 @@ namespace Netlist{
             const std::string&        getName       () const;
             unsigned int              getId         () const;
             Term::Type                getType       () const;
-            const Node*               getNode       (int&) const;
+            Node*                     getNode       (int) const;
             const std::vector<Node*>& getNodes      () const;
             size_t                    getFreeNodeId () const;
             

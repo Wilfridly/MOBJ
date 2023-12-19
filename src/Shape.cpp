@@ -1,9 +1,9 @@
-#pragma once
 #include "Box.h"
 #include "Symbol.h"
 #include "Shape.h"
 #include "Term.h"
 #include "Cell.h"
+#include "XmlUtil.h"
 
 namespace Netlist{
 
@@ -40,10 +40,10 @@ namespace Netlist{
         if (lineTag == nodeName)
             shape = LineShape::fromXml( owner, reader );
         if (termTag == nodeName)
-            shape = TermShape::fromXml( owner, reader );
+            shape = TermShape::fromXml( owner->getCell(), reader );
         if (shape == NULL)
-            cerr << "[ERROR] Unknown or misplaced tag <" << nodeName << "> (line:"
-            << xmlTextReaderGetParserLineNumber(reader) << ")." << endl;
+            std::cerr << "[ERROR] Unknown or misplaced tag <" << nodeName << "> (line:"
+            << xmlTextReaderGetParserLineNumber(reader) << ")." << std::endl;
         return shape;
     }
     
@@ -56,16 +56,13 @@ namespace Netlist{
     //Classe fille Boxshape
     BoxShape::BoxShape( Symbol* owner, const Box& box ):Shape(owner),box_( box ){}
     
-    BoxShape::BoxShape( Symbol* owner, int x1 , int y1 , int x2 , int y2  ):Shape(owner) {
-        owner_ = owner;
-        box_ = new Box(x1,y1,x2,y2);
-    }
+    BoxShape::BoxShape( Symbol* owner, int x1 , int y1 , int x2 , int y2  ):Shape(owner),box_(Box(x1,y1,x2,y2)) {}
     BoxShape::~BoxShape (){}
         //Accesseurs
     Box BoxShape::getBoundingBox () const{
         return box_ ; 
     }
-    void  BoxShape::toXml ( std::ostream& stream ){
+    void  BoxShape::toXml ( std::ostream& stream )const{
         stream << "<box x1=\"" << box_.getX1() << "\" y1=\"" << box_.getY1() << "\" x2=\"" << box_.getX2() << "\" y2=\"" << box_.getY2() << "\"/>";
     }
 
@@ -80,7 +77,7 @@ namespace Netlist{
         
         if(BoxTag == BoxName){
             if(xmlGetIntAttribute(reader, "x1", x1) && xmlGetIntAttribute(reader, "x2", x2) && xmlGetIntAttribute(reader, "y1", y1) && xmlGetIntAttribute(reader, "y2", y2)){
-                Box box = new Box(x1,y1,x2,y2);    
+                Box box = Box(x1,y1,x2,y2);    
                 Shape* shape = new BoxShape(owner,box);
                 return shape;
             }
@@ -89,20 +86,6 @@ namespace Netlist{
             std::cerr << "Problème avec le fromXml de BoxShape" << std::endl;
             exit(1);
         }
-
-        // const xmlChar* BoxTag   = xmlTextReaderConstString           ( reader, (const xmlChar*)"box" );
-        // const xmlChar* BoxName = xmlTextReaderConstLocalName         ( reader );
-        // 
-        // if(BoxTag == BoxName){
-            // const std::string symbx1 = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"x1"));
-            // const std::string symby1 = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"y1"));
-            // const std::string symbx2 = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"x2"));
-            // const std::string symby2 = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"y2"));
-        // }
-        // if (symbx1.isEmpty()! && symby1.isEmpty()! && symbx2.isEmpty()! && symby2.isEmpty()!){
-            // Shape* shape = new BoxShape(owner, atoi(symbx1.c_str()), atoi(symby1.c_str()), atoi(symbx2.c_str()), atoi(symbx2.c_str()));
-            // return shape;
-        // }
     }
 
 
@@ -112,12 +95,11 @@ namespace Netlist{
 
 
     //Classe fille TermShape
-    TermShape::TermShape( Symbol* owner, Term* term , int x , int y, TermShape::NameAlign NameA ):owner_(owner),term_(term),x_(x) ,y_(y), align_(nameA){}
+    TermShape::TermShape( Symbol* owner, Term* term , int x , int y, TermShape::NameAlign align ) : Shape(owner),term_(term),x_(x) ,y_(y), align_(align){}
     TermShape::~TermShape (){}
         //Accesseurs
     Box TermShape::getBoundingBox () const{
-        Box box = new Box(x,y,x,y);
-        return box; 
+        return Box(x_,y_,x_,y_); 
     }
     
     std::string TermShape::toString (TermShape::NameAlign NameA){
@@ -142,13 +124,13 @@ namespace Netlist{
         else return(Unknown);
     }
 
-    void  TermShape::toXml ( std::ostream& stream ){
-        stream << "<term name=" << term_.getName() << "\" x1=\"" << x_ << "\" y1=\"" << y_ << "\" align=\"" << align_ << "\"/>";
+    void  TermShape::toXml ( std::ostream& stream )const{
+        stream << "<term name=" << term_->getName() << "\" x1=\"" << x_ << "\" y1=\"" << y_ << "\" align=\"" << align_ << "\"/>";
     }
 
-    Shape* TermShape::fromXml ( Symbol* owner, xmlTextReaderPtr reader){
+    Shape* TermShape::fromXml ( Cell* owner, xmlTextReaderPtr reader){
         int x1 = 0;
-        int x2 = 0;
+        int y1 = 0;
 
         const xmlChar* BoxTag   = xmlTextReaderConstString           ( reader, (const xmlChar*)"term" );
         const xmlChar* BoxName = xmlTextReaderConstLocalName         ( reader );
@@ -159,7 +141,7 @@ namespace Netlist{
             const std::string align = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"align"));
 
             if(xmlGetIntAttribute(reader, "x1", x1) && xmlGetIntAttribute(reader, "y1", y1) ){    
-                Shape* shape = new TermShape(owner, TermName->getTerm() ,x1, y1, toNameAlign(align));
+                Shape* shape = new TermShape(owner->getSymbol(), owner->getTerm(TermName) ,x1, y1, toNameAlign(align));
                 return shape;
             }
         }
@@ -174,14 +156,13 @@ namespace Netlist{
 
 
     //Classe fille LineShape
-    LineShape::LineShape( Symbol* owner, int x1, int y1, int x2, int y2):owner_(owner),x1_(x1),y1_(y1),x2_(x2),y2_(y2){}
+    LineShape::LineShape( Symbol* owner, int x1, int y1, int x2, int y2):Shape(owner),x1_(x1),y1_(y1),x2_(x2),y2_(y2){}
     LineShape::~LineShape(){}
     
     Box LineShape::getBoundingBox () const{
-        Box box = new Box(x1,y1,x2,y2);
-        return box; 
+        return Box(x1_,y1_,x2_,y2_); 
     }
-    void  LineShape::toXml ( std::ostream& stream ){
+    void  LineShape::toXml ( std::ostream& stream ) const{
         stream << "<line x1=\"" << x1_ << "\" y1=\"" << y1_ << "\" x2=\"" << x2_ << "\" y2=\"" << y2_ << "\"/>";
     }
     
@@ -204,7 +185,7 @@ namespace Netlist{
             std::cerr << "Problème avec le fromXml de LineShape" << std::endl;
             exit(1);
         }
-
+    }
 
 
 
@@ -221,31 +202,30 @@ namespace Netlist{
     Box EllipseShape::getBoundingBox () const{
         return box_; 
     }
-    void  EllipseShape::toXml ( std::ostream& stream ){
-        stream << "<ellipse x1=\"" << box_.getX1() << "\" y1=\"" << box.getY1() << "\" x2=\"" << box_.getX2() << "\" y2=\"" << box.getY2() << "\"/>";
+    void  EllipseShape::toXml ( std::ostream& stream ) const{
+        stream << "<ellipse x1=\"" << box_.getX1() << "\" y1=\"" << box_.getY1() << "\" x2=\"" << box_.getX2() << "\" y2=\"" << box_.getY2() << "\"/>";
     }
     
     Shape* EllipseShape::fromXml(Symbol* owner, xmlTextReaderPtr reader){
-    int x1 = 0;
-    int x2 = 0;
-    int y1 = 0;
-    int y2 = 0;  
+        int x1 = 0;
+        int x2 = 0;
+        int y1 = 0;
+        int y2 = 0;  
 
-    const xmlChar* BoxTag   = xmlTextReaderConstString           ( reader, (const xmlChar*)"ellipse" );
-    const xmlChar* BoxName = xmlTextReaderConstLocalName         ( reader );
-    
-    if(BoxTag == BoxName){
-        if(xmlGetIntAttribute(reader, "x1", x1) && xmlGetIntAttribute(reader, "x2", x2) && xmlGetIntAttribute(reader, "y1", y1) && xmlGetIntAttribute(reader, "y2", y2)){    
-            Box box = new Box(x1, y1, x2, y2 );
-            Shape* shape = new EllipseShape(owner, box);
-            return shape;
+        const xmlChar* BoxTag   = xmlTextReaderConstString           ( reader, (const xmlChar*)"ellipse" );
+        const xmlChar* BoxName = xmlTextReaderConstLocalName         ( reader );
+
+        if(BoxTag == BoxName){
+            if(xmlGetIntAttribute(reader, "x1", x1) && xmlGetIntAttribute(reader, "x2", x2) && xmlGetIntAttribute(reader, "y1", y1) && xmlGetIntAttribute(reader, "y2", y2)){    
+                Shape* shape = new EllipseShape(owner, Box(x1, y1, x2, y2 ));
+                return shape;
+            }
+        }
+        else{
+            std::cerr << "Problème avec le fromXml de EllipseShape" << std::endl;
+            exit(1);
         }
     }
-    else{
-        std::cerr << "Problème avec le fromXml de EllipseShape" << std::endl;
-        exit(1);
-    }
-
     
 
 
@@ -255,35 +235,34 @@ namespace Netlist{
 
 
     //Classe fille ArcShape
-    ArcShape::ArcShape(Symbol* owner, Box& box):Shape(owner),box_(box), start_(start), span_(span){}
+    ArcShape::ArcShape(Symbol* owner, const Box& box, int start, int span):Shape(owner),box_(box), start_(start), span_(span){}
     // ArcShape::ArcShape(Symbol* owner, int x1 , int y1 , int x2 , int y2  ):Shape(owner){
     //     box_ = new Box(x1,y1,x2,y2);
     // }
     ArcShape::~ArcShape(){}
-    void  ArcShape::toXml ( std::ostream& stream ){
+    void  ArcShape::toXml ( std::ostream& stream )const{
         stream << "<arc x1=\"" << box_.getX1() << "\" y1=\"" << box_.getY1() << "\" x2=\"" << box_.getX2() << "\" y2=\"" << box_.getY2() << "\" start=\"" << start_ << "\" span=\"" << span_ << "\"/>";
     }
 
     Shape* ArcShape::fromXml(Symbol* owner, xmlTextReaderPtr reader){
-    int x1 = 0;
-    int x2 = 0;
-    int y1 = 0;
-    int y2 = 0;  
-    int start = 0;
-    int span = 0 ;
-    const xmlChar* BoxTag   = xmlTextReaderConstString           ( reader, (const xmlChar*)"arc" );
-    const xmlChar* BoxName = xmlTextReaderConstLocalName         ( reader );
-    
-    if(BoxTag == BoxName){
-        if(xmlGetIntAttribute(reader, "x1", x1) && xmlGetIntAttribute(reader, "x2", x2) && xmlGetIntAttribute(reader, "y1", y1) && xmlGetIntAttribute(reader, "y2", y2) && xmlGetIntAttribute(reader,"start", start) && xmlGetIntAttribute(reader,"span", span)){    
-            Box box = new Box(x1, y1, x2, y2 );
-            Shape* shape = new ArcShape(owner, box, start, span);
-            return shape;
+        int x1 = 0;
+        int x2 = 0;
+        int y1 = 0;
+        int y2 = 0;  
+        int start = 0;
+        int span = 0 ;
+        const xmlChar* BoxTag   = xmlTextReaderConstString           ( reader, (const xmlChar*)"arc" );
+        const xmlChar* BoxName = xmlTextReaderConstLocalName         ( reader );
+
+        if(BoxTag == BoxName){
+            if(xmlGetIntAttribute(reader, "x1", x1) && xmlGetIntAttribute(reader, "x2", x2) && xmlGetIntAttribute(reader, "y1", y1) && xmlGetIntAttribute(reader, "y2", y2) && xmlGetIntAttribute(reader,"start", start) && xmlGetIntAttribute(reader,"span", span)){    
+                Shape* shape = new ArcShape(owner, Box(x1, y1, x2, y2 ), start, span);
+                return shape;
+            }
+        }
+        else{
+            std::cerr << "Problème avec le fromXml de ArcShape" << std::endl;
+            exit(1);
         }
     }
-    else{
-        std::cerr << "Problème avec le fromXml de ArcShape" << std::endl;
-        exit(1);
-    }
-
 }

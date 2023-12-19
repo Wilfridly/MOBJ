@@ -36,10 +36,10 @@ namespace Netlist{
     Term::Type Net::getType()                   const{return type_;}
     const std::vector<Node*>& Net::getNodes()   const{return nodes_;}
     
-    const Node* Net::getNode(int& id)const{
-        for(std::vector<Node*>::iterator it = nodes_.begin(); it != nodes_.end() ; ++it){
+    Node* Net::getNode(int id)const{
+        for(std::vector<Node*>::const_iterator it = nodes_.begin(); it != nodes_.end() ; ++it){
             if(*it != NULL){
-                if(id == it->getId()) return *it;
+                if((*it)->Node::getId() == id) return *it;
             }
         }
         return NULL;

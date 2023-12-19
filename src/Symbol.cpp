@@ -1,14 +1,22 @@
+#include <iostream>
+#include <string>
+#include <stdlib.h>
 
+
+#include "Cell.h"
+#include "Term.h"
+#include "Point.h"
+#include "Instance.h"
+#include "Net.h"
+#include "XmlUtil.h"
 
 namespace Netlist{
 
     Symbol::Symbol ( Cell* owner){
         owner_ = owner;
-        shapes_
     }
 
     Symbol::~Symbol(){
-
     }
     
     Cell* Symbol::getCell () const{
@@ -28,9 +36,11 @@ namespace Netlist{
     }
     
     TermShape* Symbol::getTermShape    ( Term* ) const{
-        // return term
+        return term->getTermShape();
     }
-    void Symbol::add ( Shape* );
+    void Symbol::add ( Shape* ){
+               
+    }
     
     void Symbol::remove ( Shape* );
     
