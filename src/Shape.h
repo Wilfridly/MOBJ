@@ -50,7 +50,7 @@ namespace Netlist {
             static std::string  toString        ( NameAlign );
             static NameAlign    toNameAlign     ( std::string );
             void                toXml           ( std::ostream& stream )const;
-            static  Shape*      fromXml         ( Cell*, xmlTextReaderPtr);
+            static  Shape*      fromXml         ( Symbol*, xmlTextReaderPtr);
 
         private :
             Term* term_ ;

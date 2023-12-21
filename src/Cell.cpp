@@ -6,6 +6,7 @@
 #include  "Term.h"
 #include  "Net.h"
 #include  "Instance.h"
+#include  "Symbol.h"
 
 
 namespace Netlist {

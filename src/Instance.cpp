@@ -66,10 +66,18 @@ namespace Netlist{
 
     void  Instance::setPosition   ( const Point& pos){
         position_ = pos;
+
+        for ( std::vector<Term*>::iterator it = terms_.begin() ; it != terms_.end() ; ++it ) {
+            (*it)->setPosition((*it)->getPosition().translate(pos));
+        }
     }
 
     void  Instance::setPosition   ( int x, int y ){
         position_ = Point(x,y);
+
+        for ( std::vector<Term*>::iterator it = terms_.begin() ; it != terms_.end() ; ++it ) {
+            (*it)->setPosition((*it)->getPosition().translate(Point(x,y)));
+        }
     }
 
     void  Instance::toXml ( std::ostream& stream ){
@@ -84,12 +92,13 @@ namespace Netlist{
         const std::string instX =           xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"x"));
         const std::string instY =           xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"y"));
 
+        if(name.empty()||mastername.empty()||instX.empty()||instY.empty())  return NULL;
+
         Cell* mastercell = Cell::find(mastername);
         Instance* inst = new Instance(cell,mastercell, name);
-        inst->setPosition(atoi(instX.c_str()),atoi(instY.c_str()));
         
-        if(name.empty()||mastername.empty()||instX.empty()||instY.empty())
-            return NULL;
+        inst->setPosition(atoi(instX.c_str()),atoi(instY.c_str()));
         return inst;
+
     }
 }

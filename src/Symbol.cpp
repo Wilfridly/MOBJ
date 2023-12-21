@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <stdlib.h>
+#include <algorithm>
 
 
 #include "Cell.h"
@@ -9,6 +10,7 @@
 #include "Instance.h"
 #include "Net.h"
 #include "XmlUtil.h"
+#include "Shape.h"
 
 namespace Netlist{
 
@@ -24,28 +26,85 @@ namespace Netlist{
     }
     
     Box Symbol::getBoundingBox () const{
-        Box bb;
-        for(size__t i = 0; i < shapes_.size();i++){
-            bb.merge(shapes_[i]->getBoundingBox())
+        Box box;
+        for(size_t i = 0; i < shapes_.size();i++){
+            box.merge(shapes_[i]->getBoundingBox());
         }
-        return bb;
+        return box;
     }
     
     Point Symbol::getTermPosition ( Term* term ) const{
         return term->getPosition();
     }
     
-    TermShape* Symbol::getTermShape    ( Term* ) const{
-        return term->getTermShape();
-    }
-    void Symbol::add ( Shape* ){
-               
-    }
-    
-    void Symbol::remove ( Shape* );
-    
-    void Symbol::toXml ( std::ostream& ) const;
-    
-    static Symbol* Symbol::fromXml         ( Cell*, xmlTextReaderPtr );
+    TermShape* Symbol::getTermShape(Term* term) const {
+        for (std::vector<Shape*>::const_iterator it = shapes_.begin(); it != shapes_.end() ; ++it) {
 
+            TermShape* termShape = dynamic_cast<TermShape*>(*it);
+            if (termShape != nullptr && termShape->getTerm() == term) {
+                return termShape;
+            }
+        }
+        return nullptr;
+    }
+
+    void Symbol::add ( Shape* shape){
+        shapes_.push_back(shape);
+    }
+    
+    void Symbol::remove ( Shape* shape){
+        for(std::vector<Shape*>::const_iterator it = shapes_.begin(); it != shapes_.end() ; ++it){
+            if(*it == shape){
+                shapes_.erase(it);
+            }
+        }
+    }
+    
+    void Symbol::toXml ( std::ostream& stream ) const {
+        stream << indent <<"<symbol>" << std::endl;
+         for(std::vector<Shape*>::const_iterator it = shapes_.begin(); it != shapes_.end() ; ++it){
+            (*it)->toXml(stream);
+        }
+        stream <<indent <<"</symbol>" << std::endl;
+    }
+    
+    Symbol* Symbol::fromXml ( Cell* owner, xmlTextReaderPtr reader){
+        
+        Symbol* symbol = new Symbol(owner);
+
+        while(true){
+            int status = xmlTextReaderRead(reader);
+
+            if (status == 0){
+                break; //Fin du XML
+            }
+            else if (status !=1){
+                std::cout << "[ERROR] Symbol::fromXml(): Unexpected termination of the XML parser." << std::endl;
+                delete symbol;
+                return nullptr;
+            }
+
+            switch ( xmlTextReaderNodeType(reader) ) {
+                case XML_READER_TYPE_COMMENT:
+                case XML_READER_TYPE_WHITESPACE:
+                case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
+                continue;
+            }
+
+            if(xmlTextReaderNodeType(reader)== XML_READER_TYPE_END_ELEMENT){
+                return symbol;
+            }
+            // const xmlChar* Name = xmlTextReaderConstLocalName( reader );
+            Shape* shapeXml = Shape::fromXml(symbol,reader);
+            if(shapeXml != nullptr){
+                owner->getSymbol()->add(shapeXml);
+            }
+            else{
+                std::cout << "[ERROR] Symbol::fromXml(): Unknown" << std::endl;
+                delete symbol;
+                return nullptr;
+            }
+        }
+        return symbol;
+    }
 }

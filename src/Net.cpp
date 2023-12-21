@@ -36,7 +36,7 @@ namespace Netlist{
     Term::Type Net::getType()                   const{return type_;}
     const std::vector<Node*>& Net::getNodes()   const{return nodes_;}
     
-    Node* Net::getNode(int id)const{
+    Node* Net::getNode(size_t id)const{
         for(std::vector<Node*>::const_iterator it = nodes_.begin(); it != nodes_.end() ; ++it){
             if(*it != NULL){
                 if((*it)->Node::getId() == id) return *it;
@@ -58,17 +58,20 @@ namespace Netlist{
     //Modificateurs 
     void  Net::add( Node* node){
 
+        //Methode avec push back
+        if(node) nodes_.push_back(node);
         // Methode avec insert
-        size_t indice = node->getId();
-        if(indice == Node::noid){ //si Id = 0, ajouter sur le noeud
-            indice = getFreeNodeId();
-            nodes_.insert(nodes_.begin()+indice,node);
-            node->setId(indice);
-        }
-        else{
-            nodes_.resize(indice);
-            nodes_.insert(nodes_.begin()+indice,node);
-        }
+        // size_t indice = node->getId();
+
+        // if(indice == Node::noid){ //si Id = 0, ajouter sur le noeud
+        //     indice = getFreeNodeId();
+        //     nodes_.insert(nodes_.begin()+indice,node);
+        //     node->setId(indice);
+        // }
+        // else{
+        //     nodes_.resize(indice);
+        //     nodes_.insert(nodes_.begin()+indice,node);
+        // }
     }
 
     bool  Net::remove( Node* node){ //enlever un noeud
@@ -102,10 +105,14 @@ namespace Netlist{
         return false;
     }
 
-    void  Net::toXml ( std::ostream& stream ){ // A MODIFIER
+    void  Net::toXml ( std::ostream& stream ){
         stream << indent << "<net name=\"" << name_ << "\" type=\"" << Term::toString(type_) << "\">\n";
         ++indent;
         for(std::vector<Node*>::iterator it = nodes_.begin() ; it != nodes_.end() ; ++it ){
+            if((*it) != NULL)
+                (*it)->toXml(stream);
+        }
+        for(std::vector<Line*>::iterator it = lines_.begin() ; it != lines_.end() ; ++it ){
             if((*it) != NULL)
                 (*it)->toXml(stream);
         }    
@@ -118,6 +125,7 @@ namespace Netlist{
         Net* net = NULL;
        
         const xmlChar* nodeTag = xmlTextReaderConstString(reader,(const xmlChar*)"node");
+        const xmlChar* lineTag = xmlTextReaderConstString(reader,(const xmlChar*)"line");
         std::string name = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"name"));
         std::string type = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"type"));
 
@@ -150,6 +158,11 @@ namespace Netlist{
             if(nodeName == nodeTag){
                 if(Node::fromXml(net,reader)) {
                     std::cout << "le fromXml de node fonctionne" << std::endl;
+                    continue;
+                }
+            } else if( nodeName == lineTag){
+                if(Line::fromXml(net,reader)) {
+                    std::cout << "le fromXml de line fonctionne" << std::endl;
                     continue;
                 }
             }
