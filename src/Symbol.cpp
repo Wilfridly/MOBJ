@@ -2,7 +2,7 @@
 #include <string>
 #include <stdlib.h>
 #include <algorithm>
-
+#include <vector>
 
 #include "Cell.h"
 #include "Term.h"
@@ -41,11 +41,11 @@ namespace Netlist{
         for (std::vector<Shape*>::const_iterator it = shapes_.begin(); it != shapes_.end() ; ++it) {
 
             TermShape* termShape = dynamic_cast<TermShape*>(*it);
-            if (termShape != nullptr && termShape->getTerm() == term) {
+            if (termShape != NULL && termShape->getTerm() == term) {
                 return termShape;
             }
         }
-        return nullptr;
+        return NULL;
     }
 
     void Symbol::add ( Shape* shape){
@@ -53,7 +53,7 @@ namespace Netlist{
     }
     
     void Symbol::remove ( Shape* shape){
-        for(std::vector<Shape*>::const_iterator it = shapes_.begin(); it != shapes_.end() ; ++it){
+        for(std::vector<Shape*>::iterator it = shapes_.begin(); it != shapes_.end() ; ++it){
             if(*it == shape){
                 shapes_.erase(it);
             }
@@ -81,7 +81,7 @@ namespace Netlist{
             else if (status !=1){
                 std::cout << "[ERROR] Symbol::fromXml(): Unexpected termination of the XML parser." << std::endl;
                 delete symbol;
-                return nullptr;
+                return NULL;
             }
 
             switch ( xmlTextReaderNodeType(reader) ) {
@@ -96,13 +96,13 @@ namespace Netlist{
             }
             // const xmlChar* Name = xmlTextReaderConstLocalName( reader );
             Shape* shapeXml = Shape::fromXml(symbol,reader);
-            if(shapeXml != nullptr){
+            if(shapeXml != NULL){
                 owner->getSymbol()->add(shapeXml);
             }
             else{
                 std::cout << "[ERROR] Symbol::fromXml(): Unknown" << std::endl;
                 delete symbol;
-                return nullptr;
+                return NULL;
             }
         }
         return symbol;

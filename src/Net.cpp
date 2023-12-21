@@ -44,6 +44,7 @@ namespace Netlist{
         }
         return NULL;
     }
+
     size_t Net::getFreeNodeId () const{ //recherche d'une place libre
         for(size_t i = 0; i < nodes_.size();i++){
             if(nodes_[i]== NULL) {

@@ -91,7 +91,7 @@ namespace Netlist{
         else{
             std::cerr << "Problème avec le fromXml de BoxShape" << std::endl;
         }
-        return nullptr;
+        return NULL;
     }
 
 
@@ -157,7 +157,7 @@ namespace Netlist{
         else{
             std::cerr << "Problème avec le fromXml de TermShape" << std::endl;
         }
-        return nullptr;
+        return NULL;
     }
 
 
@@ -195,7 +195,7 @@ namespace Netlist{
         else{
             std::cerr << "Problème avec le fromXml de LineShape" << std::endl;
         }
-        return nullptr;
+        return NULL;
     }
 
 
@@ -237,7 +237,7 @@ namespace Netlist{
         else{
             std::cerr << "Problème avec le fromXml de EllipseShape" << std::endl;
         }
-        return nullptr;
+        return NULL;
     }
     
 
@@ -283,6 +283,6 @@ namespace Netlist{
         else{
             std::cerr << "Problème avec le fromXml de ArcShape" << std::endl;
         }
-        return nullptr;
+        return NULL;
     }
 }
