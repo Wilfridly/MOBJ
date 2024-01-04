@@ -10,24 +10,30 @@ using namespace std;
 #include "Cell.h"
 using namespace Netlist;
 
+# include <QApplication>
+# include <QtGui>
+# include "CellViewer.h"
 
-int main ( int argc, char* argv[] )
-{
-  cout << "Chargement des modeles..." << endl;
-  Cell::load( "vdd" );
-  Cell::load( "gnd" );
-  Cell::load( "TransistorN" );
-  Cell::load( "TransistorP" );
-  Cell::load( "and2" );
-  Cell::load( "or2" );
-  Cell* xor2      = Cell::load( "xor2" );
-  Cell* halfadder = Cell::load( "halfadder" );
 
-  cout << "\nContenu du <xor2>:" << endl;
-  xor2->toXml( cout );
+int main ( int argc , char * argv []) {
+  Cell::load("gnd");
+  Cell::load("vdd");
+  Cell::load("TransistorN");
+  Cell::load("TransistorP");
+  Cell::load("and2");
+  Cell::load("xor2");
+  Cell::load("or2");
+  Cell* halfadder = Cell::load("halfadder");
+  
+  QApplication * qa = new QApplication( argc , argv );
+  CellViewer * viewer = new CellViewer();
 
-  cout << "\nContenu du <halfadder>:" << endl;
-  halfadder->toXml( cout );
-
-  return 0;
+  viewer->setCell(halfadder);
+  
+  viewer->show();
+  int rvalue = qa -> exec ();
+  
+  delete qa ;
+  return rvalue ;
+  
 }

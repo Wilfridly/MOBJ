@@ -157,12 +157,12 @@ namespace Netlist{
 
             if(nodeName == nodeTag){
                 if(Node::fromXml(net,reader)) {
-                    std::cout << "le fromXml de node fonctionne" << std::endl;
+                    // std::cout << "le fromXml de node fonctionne" << std::endl;
                     continue;
                 }
             } else if( nodeName == lineTag){
                 if(Line::fromXml(net,reader)) {
-                    std::cout << "le fromXml de line fonctionne" << std::endl;
+                    // std::cout << "le fromXml de line fonctionne" << std::endl;
                     continue;
                 }
             }
