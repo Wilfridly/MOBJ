@@ -1,4 +1,5 @@
 #include <QHeaderView>
+#include <QLayout>
 #include "InstancesWidget.h"
 #include "InstancesModel.h"
 #include "CellViewer.h"
@@ -15,6 +16,7 @@ namespace Netlist{
         setAttribute ( Qt::WA_QuitOnClose , false );
         setAttribute ( Qt::WA_DeleteOnClose , false );
         setContextMenuPolicy ( Qt::ActionsContextMenu );
+        QVBoxLayout* layout = new QVBoxLayout(this); //gère l'affichage
 
         view_ -> setShowGrid ( false );
         view_ -> setAlternatingRowColors ( true );
@@ -30,6 +32,9 @@ namespace Netlist{
         QHeaderView * verticalHeader = view_ ->verticalHeader();
         verticalHeader -> setVisible ( false );
         load_ -> setText ( "Load" );
+
+        layout->addWidget(view_); //Ajout des widgets
+        layout->addWidget(load_);
         connect(load_, SIGNAL( clicked () ), this, SLOT( load () ));
     }
 

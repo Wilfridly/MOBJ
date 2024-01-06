@@ -14,7 +14,7 @@ namespace Netlist{
         masterCell_ = model;
         name_ = name;
         terms_ = std::vector<Term*>();
-        position_ = Point(0,0);
+        position_ = Point();
         owner_->add(this);
         // std::cout << "Debug::Instance CTOR" << std::endl;
 

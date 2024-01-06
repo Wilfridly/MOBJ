@@ -17,18 +17,18 @@ namespace Netlist{
         direction_ = d;
         type_ = External;
         net_ = NULL;
+        // net_ = cell->getNet(name);
         cell->add(this);
-        // std::cout << "Debug::Term CTOR : " << name_ << std::endl;
     }
 
     Term::Term ( Instance* instance, const Term* modelTerm ):node_(this,Node::noid){ //ctor2
         owner_ = static_cast<void*>(instance);
         name_ = modelTerm->name_;
-        direction_ = modelTerm->direction_;
+        direction_ = modelTerm->getDirection();
         type_ = Internal;
-        net_ = modelTerm->net_;
+        net_ = modelTerm->getNet();
         instance->add(this);
-        // std::cout << "Debug::Term2 CTOR" << std::endl;
+        // std::cout << "Debug::Term2 CTOR" << type_ << std::endl; // Test si mon ctor est appelé
     }
 
     Term::~Term (){ //dtor
@@ -81,15 +81,15 @@ namespace Netlist{
     // Modificateurs
     void Term::setNet( Net* net){
         if(net == NULL){ //test si le net existe
-            net_ = NULL;
-            if(node_.getId() != Node::noid)
-                net_->remove(&node_);
-            if(type_ == External) 
-                static_cast<Cell*>(owner_)->remove(net); 
+            exit(1);
+            // net_ = NULL;
+            // if(node_.getId() != Node::noid)
+            //     net_->remove(&node_);
+            // if(type_ == External) 
+            //     static_cast<Cell*>(owner_)->remove(net); 
         }
         else{ //set le net
             net_ = net;
-            // std::cout << "ça marche le set net ?" << std::endl;
             net_->add(&node_);
         }
     }
@@ -97,12 +97,11 @@ namespace Netlist{
     void  Term::setNet( const std::string& name){
         Net* net = getOwnerCell()->getNet(name);
         if(net == NULL){ //test si le net existe
-            // std::cout << "[ERROR]" << name << " non trouvé " << std::endl;
             exit(1);
         }
         //set le net
-        net_->add(&node_);
         net_ = net;
+        net_->add(&node_);
     }
 
 
@@ -127,10 +126,9 @@ namespace Netlist{
 
         Term::Direction d = toDirection(termdirection);
         Term* term = new Term(cell, termName, d);
-
         term->setPosition(atoi(termX.c_str()),atoi(termY.c_str()));
         
-        if(termName.empty())
+        if(termName.empty()|termdirection.empty()|termX.empty()|termY.empty())
             return NULL;
         return term;
     }

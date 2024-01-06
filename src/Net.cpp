@@ -72,7 +72,10 @@ namespace Netlist{
         //     nodes_.resize(indice);
         //     nodes_.insert(nodes_.begin()+indice,node);
         // }
+
+        
     }
+
 
     bool  Net::remove( Node* node){ //enlever un noeud
         for(size_t i = 0; i < nodes_.size();i++){

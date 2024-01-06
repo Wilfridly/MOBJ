@@ -35,7 +35,7 @@ namespace Netlist {
                    Cell*              getOwnerCell () const;
             inline Instance*          getInstance  () const {return (type_ == Internal) ? static_cast<Instance*>(owner_) : NULL;}
             inline Direction          getDirection () const {return direction_;}
-            inline Point              getPosition  () const {return Point();}
+            inline Point              getPosition  () const {return node_.getPosition();}
             inline Type               getType      () const {return type_;}
                 
             void                      toXml        ( std::ostream& stream );

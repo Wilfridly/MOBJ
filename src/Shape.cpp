@@ -140,24 +140,16 @@ namespace Netlist{
         int x1 = 0;
         int y1 = 0;
 
-        const xmlChar* BoxTag   = xmlTextReaderConstString           ( reader, (const xmlChar*)"term" );
-        const xmlChar* BoxName = xmlTextReaderConstLocalName         ( reader );
-        
-        if(BoxTag == BoxName){
-            
-            const std::string TermName = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"name"));
-            const std::string align = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"align"));
+        const std::string TermName = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"name"));
+        const std::string align = xmlCharToString(xmlTextReaderGetAttribute(reader,(const xmlChar*)"align"));
 
-            if(xmlGetIntAttribute(reader, "x1", x1) && xmlGetIntAttribute(reader, "y1", y1) ){    
-                TermShape* termshape = new TermShape(owner,owner->getCell()->getTerm(TermName),x1,y1,toNameAlign(align));
-                return termshape;
-                // return new TermShape(owner->getSymbol(), owner->getTerm(TermName) ,x1, y1, toNameAlign(align));
-            }
+        if(xmlGetIntAttribute(reader, "x1", x1) && xmlGetIntAttribute(reader, "y1", y1) ){    
+            TermShape* termshape = new TermShape(owner,owner->getCell()->getTerm(TermName),x1,y1,toNameAlign(align));
+            return termshape;
+            // return new TermShape(owner->getSymbol(), owner->getTerm(TermName) ,x1, y1, toNameAlign(align));
         }
-        else{
-            std::cerr << "Problème avec le fromXml de TermShape" << std::endl;
-        }
-        return nullptr;
+
+        return NULL;
     }
 
 
@@ -165,7 +157,12 @@ namespace Netlist{
 
 
     //Classe fille LineShape
-    LineShape::LineShape( Symbol* owner, int x1, int y1, int x2, int y2):Shape(owner),x1_(x1),y1_(y1),x2_(x2),y2_(y2){}
+    LineShape::LineShape( Symbol* owner, int x1, int y1, int x2, int y2):Shape(owner),x1_(x1),y1_(y1),x2_(x2),y2_(y2){
+        if((x2>x1 && y1>y2)||(x2<x1 && y1<y2)) sens_ = true; // codiagonal
+        else{
+            sens_ = false; // diagonal
+        }
+    }
     LineShape::~LineShape(){}
     
     Box LineShape::getBoundingBox () const{
@@ -263,6 +260,8 @@ namespace Netlist{
         stream << indent <<"<arc x1=\"" << box_.getX1() << "\" y1=\"" << box_.getY1() << "\" x2=\"" << box_.getX2() << "\" y2=\"" << box_.getY2() << "\" start=\"" << start_ << "\" span=\"" << span_ << "\"/>" << std::endl;
         indent--;    
     }
+    int ArcShape::getStart() const{ return start_;}
+    int ArcShape::getSpan () const{ return span_;} 
 
     Shape* ArcShape::fromXml(Symbol* owner, xmlTextReaderPtr reader){
         int x1 = 0;

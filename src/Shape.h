@@ -44,9 +44,10 @@ namespace Netlist {
                                 TermShape       ( Symbol *, Term*, int, int, NameAlign);
                                 ~TermShape      ();
                    Box          getBoundingBox  () const ;
-            inline Term*        getTerm         () const{ return term_;}
-            inline int          getX            () const{ return x_;}
-            inline int          getY            () const{ return y_;}
+            inline Term*        getTerm         () const{ return term_;};
+            inline int          getX            () const{ return x_;};
+            inline int          getY            () const{ return y_;};
+            inline NameAlign    getNameAlign    () const{ return align_;};
             static std::string  toString        ( NameAlign );
             static NameAlign    toNameAlign     ( std::string );
             void                toXml           ( std::ostream& stream )const;
@@ -70,8 +71,10 @@ namespace Netlist {
                 Box                 getBoundingBox  () const ;
         void                        toXml           ( std::ostream& stream )const;
         static  Shape*              fromXml         ( Symbol*, xmlTextReaderPtr);
+        inline  bool                getSens         () const{ return sens_;}
         private :
-            int x1_ , y1_ , x2_ , y2_ ;
+            int x1_ , y1_ , x2_ , y2_;
+            bool sens_;
     };
 
 
@@ -104,6 +107,8 @@ namespace Netlist {
                     Box                 getBoundingBox  () const ;
             void                        toXml           ( std::ostream& stream )const;
             static  Shape*              fromXml         ( Symbol*, xmlTextReaderPtr);
+            int                         getStart        () const;
+            int                         getSpan         () const;
         private :
             Box box_;
             int start_;
